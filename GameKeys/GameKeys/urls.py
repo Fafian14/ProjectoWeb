@@ -20,7 +20,9 @@ from APP import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-
+    path('api/datos/', views.api_datos, name='api_datos'),
+    path('api/usuarios/registro/', views.registrar_usuario),
+    path('api/usuarios/login/', views.login_usuario),
     path('', views.index, name='index'),
     path('index.html', views.index, name='index'),
     path('tienda.html', views.tienda, name='tienda'),
@@ -33,4 +35,7 @@ urlpatterns = [
     path('pcgaming.html', views.pcgaming, name='pcgaming'),
     path('perfil.html', views.perfil, name='perfil'),
     path('topventas.html', views.topventas, name='topventas'),
+    path('api/admin/juegos/crear/', views.admin_crear_juego),
+    path('api/admin/juegos/<int:juego_id>/eliminar/', views.admin_eliminar_juego),
+    path('api/admin/juegos/<int:juego_id>/editar/', views.admin_editar_juego),
 ]

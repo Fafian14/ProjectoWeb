@@ -133,27 +133,41 @@ function togglePass(inputId, btn) {
   else { inp.type = 'password'; btn.textContent = '👁️'; }
 }
 
-function doLogin(e) {
+async function doLogin(e) {
   e.preventDefault();
+
   const email = document.getElementById('login-email').value.trim();
   const pass  = document.getElementById('login-pass').value;
   const err   = document.getElementById('login-error');
 
-  // Demo: accept any valid email + pass >= 6 chars
-  if (pass.length < 6) {
-    err.textContent = '⚠️ La contraseña debe tener al menos 6 caracteres';
+  const res = await fetch('/api/usuarios/login/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      email: email,
+      password: pass
+    })
+  });
+
+  const data = await res.json();
+
+  if (!data.ok) {
+    err.textContent = '❌ ' + data.error;
     err.style.display = '';
     return;
   }
+
   err.style.display = 'none';
 
-  const u = { nombre: email.split('@')[0], email, rol: 'user' };
-  localStorage.setItem('gk_usuario', JSON.stringify(u));
+  localStorage.setItem('gk_usuario', JSON.stringify(data.usuario));
   window.location.href = '/index.html';
 }
 
-function doRegister(e) {
+async function doRegister(e) {
   e.preventDefault();
+
   const nombre = document.getElementById('reg-nombre').value.trim();
   const email  = document.getElementById('reg-email').value.trim();
   const pass   = document.getElementById('reg-pass').value;
@@ -161,20 +175,42 @@ function doRegister(e) {
   const err    = document.getElementById('reg-error');
   const ok     = document.getElementById('reg-ok');
 
-  if (pass.length < 6) {
-    err.textContent = '⚠️ La contraseña debe tener al menos 6 caracteres';
-    err.style.display = ''; ok.style.display = 'none'; return;
-  }
   if (pass !== pass2) {
     err.textContent = '⚠️ Las contraseñas no coinciden';
-    err.style.display = ''; ok.style.display = 'none'; return;
+    err.style.display = '';
+    ok.style.display = 'none';
+    return;
   }
+
+  const res = await fetch('/api/usuarios/registro/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      nombre: nombre,
+      email: email,
+      password: pass
+    })
+  });
+
+  const data = await res.json();
+
+  if (!data.ok) {
+    err.textContent = '❌ ' + data.error;
+    err.style.display = '';
+    ok.style.display = 'none';
+    return;
+  }
+
   err.style.display = 'none';
   ok.style.display = '';
 
-  const u = { nombre, email, rol: 'user' };
-  localStorage.setItem('gk_usuario', JSON.stringify(u));
-  setTimeout(() => { window.location.href = '/index.html'; }, 1500);
+  localStorage.setItem('gk_usuario', JSON.stringify(data.usuario));
+
+  setTimeout(() => {
+    window.location.href = '/index.html';
+  }, 1200);
 }
 
 function doAdminLogin(e) {

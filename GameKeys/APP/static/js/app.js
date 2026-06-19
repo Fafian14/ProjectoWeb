@@ -10,7 +10,7 @@ let GENEROS     = [];
 // ─── Data loading ────────────────────────────────────────────
 async function cargarDatos() {
   try {
-    const res  = await fetch('/static/js/data.json');
+    const res  = await fetch('/api/datos/');
     const data = await res.json();
     JUEGOS     = data.juegos     || [];
     GIFTCARDS  = data.giftcards  || [];
@@ -300,14 +300,38 @@ function renderModalJuego(id) {
   }
 
   // Video embed
-  let videoHtml = '';
-  if (juego.videoUrl) {
-    const vid = juego.videoUrl.replace('watch?v=', 'embed/');
+let videoHtml = '';
+if (juego.videoUrl) {
+  let url = juego.videoUrl.trim();
+  let videoId = '';
+
+  if (url.includes('youtube.com/watch?v=')) {
+    videoId = url.split('watch?v=')[1].split('&')[0];
+  } else if (url.includes('youtu.be/')) {
+    videoId = url.split('youtu.be/')[1].split('?')[0];
+  } else if (url.includes('youtube.com/embed/')) {
+    videoId = url.split('embed/')[1].split('?')[0];
+  } else if (url.includes('youtube.com/shorts/')) {
+    videoId = url.split('shorts/')[1].split('?')[0];
+  }
+
+  if (videoId) {
+    const origin = encodeURIComponent(window.location.origin);
+    const vid = `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&origin=${origin}`;
+
     videoHtml = `
       <div class="ratio ratio-16x9 mb-3">
-        <iframe src="${vid}" allowfullscreen class="rounded"></iframe>
+        <iframe
+          src="${vid}"
+          title="Trailer de ${juego.nombre}"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen
+          class="rounded">
+        </iframe>
       </div>`;
   }
+}
 
   modalEl.innerHTML = `
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
