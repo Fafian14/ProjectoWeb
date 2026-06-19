@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ofertas - GameKeys</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="/static/css/estilos.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg fondo-navbar sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="/index.html"><span class="logo-gk">🎮 GameKeys</span></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMain">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" href="/index.html">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link" href="/tienda.html">Tienda</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown">Categorías</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/pcgaming.html">🖥️ PC Gaming</a></li>
+            <li><a class="dropdown-item active" href="/ofertas.html">🔥 Ofertas</a></li>
+            <li><a class="dropdown-item" href="/topventas.html">⭐ Top Ventas</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="/gift-cards.html">🎁 Gift Cards</a></li>
+      </ul>
+      <div class="search-wrap me-2">
+        <input type="text" id="buscador-input" class="form-control search-input" placeholder="Buscar juegos..." autocomplete="off">
+        <div id="resultado-box" class="resultado-box" style="display:none;"></div>
+      </div>
+      <button id="btn-buscar" class="btn btn-violeta btn-sm me-3">Buscar</button>
+      <a href="/carrito.html" class="btn btn-outline-violeta btn-sm me-2 cart-badge-wrap">
+        🛒 <span class="badge carrito-badge" style="display:none;">0</span>
+      </a>
+      <div id="auth-zone"></div>
+    </div>
+  </div>
+</nav>
+
+<div class="container py-5">
+  <div class="d-flex align-items-center gap-3 mb-2">
+    <h1 class="section-title mb-0">🔥 Ofertas de <span>Temporada</span></h1>
+  </div>
+  <p style="color:#94a3b8;" class="mb-5">Los mejores descuentos en juegos top. ¡No te los pierdas!</p>
+
+  <!-- En oferta ahora -->
+  <div class="mb-3 d-flex align-items-center gap-2">
+    <span class="pulse-dot pulse-red"></span>
+    <h5 class="mb-0 fw-700" style="color:#f1f5f9;">En oferta ahora</h5>
+    <span class="badge" style="background:rgba(239,68,68,0.2);color:#f87171;" id="cnt-oferta">0</span>
+  </div>
+  <div class="row" id="juegos-oferta"></div>
+
+  <!-- Precio regular -->
+  <div id="section-regular" class="mt-5">
+    <div class="mb-3 d-flex align-items-center gap-2">
+      <span class="pulse-dot" style="background:#64748b;width:10px;height:10px;border-radius:50%;display:inline-block;"></span>
+      <h5 class="mb-0 fw-700" style="color:#94a3b8;">Precio regular</h5>
+      <span class="badge" style="background:rgba(100,116,139,0.2);color:#94a3b8;" id="cnt-regular">0</span>
+    </div>
+    <div class="row" id="juegos-regular"></div>
+  </div>
+
+  <!-- Empty state -->
+  <div id="empty-state" class="empty-state" style="display:none;">
+    <div class="empty-icon">😔</div>
+    <h5>No hay ofertas activas</h5>
+    <p>Vuelve pronto para ver nuevas promociones</p>
+    <a href="/tienda.html" class="btn btn-violeta">Ver todos los juegos</a>
+  </div>
+</div>
+
+<div class="modal fade" id="modalJuego" tabindex="-1"></div>
+
+<footer class="footer-main mt-5">
+  <div class="container text-center" style="font-size:0.8rem;color:#475569;">
+    © 2024 GameKeys. Todos los derechos reservados.
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/static/js/app.js"></script>
+<script>
+function initPagina() {
+  const enOferta  = JUEGOS.filter(j => j.descuento > 0 && j.stock > 0);
+  const regulares = JUEGOS.filter(j => j.descuento === 0 && j.stock > 0);
+
+  document.getElementById('cnt-oferta').textContent  = enOferta.length;
+  document.getElementById('cnt-regular').textContent = regulares.length;
+
+  const conOferta  = document.getElementById('juegos-oferta');
+  const conRegular = document.getElementById('juegos-regular');
+  const empty      = document.getElementById('empty-state');
+
+  if (!enOferta.length && !regulares.length) {
+    empty.style.display = '';
+    document.getElementById('section-regular').style.display = 'none';
+    return;
+  }
+  empty.style.display = 'none';
+
+  conOferta.innerHTML = enOferta.length
+    ? enOferta.map(j => crearOfertaCard(j)).join('')
+    : '<div class="col-12 py-3" style="color:#64748b;">No hay ofertas activas ahora mismo</div>';
+
+  conRegular.innerHTML = regulares.map(j => `
+    <div class="col-lg-4 col-md-6 mb-4" style="opacity:0.65;">
+      ${crearGameCard(j, false).replace('<div class="col-lg-4 col-md-6 mb-4">','')}
+    </div>`).join('').replace(/<div class="col-lg-4 col-md-6 mb-4">/g, '');
+
+  // Simpler: just render them smaller
+  conRegular.innerHTML = regulares.map(j => {
+    const final = precioFinal(j);
+    return `
+    <div class="col-lg-3 col-md-6 mb-3">
+      <div class="game-card" style="opacity:0.65;" onclick="renderModalJuego(${j.id})">
+        <div class="card-img-wrap" style="height:140px;cursor:pointer;">
+          <img src="${j.imagen}" alt="${j.nombre}" loading="lazy">
+        </div>
+        <div class="card-body py-2">
+          <div class="genre-badge mb-1">${j.genero}</div>
+          <h6 class="card-title" style="font-size:0.88rem;">${j.nombre}</h6>
+          <div class="d-flex align-items-center justify-content-between">
+            <span class="precio-final" style="font-size:0.95rem;">$${final.toFixed(2)}</span>
+            <button class="btn btn-violeta btn-sm" style="font-size:0.75rem;padding:3px 10px;"
+                    onclick="event.stopPropagation();renderModalJuego(${j.id})">Ver</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function crearOfertaCard(j) {
+  const final = precioFinal(j);
+  return `
+    <div class="col-lg-4 col-md-6 mb-4">
+      <div class="game-card oferta-card">
+        <div class="card-img-wrap" onclick="renderModalJuego(${j.id})" role="button">
+          <img src="${j.imagen}" alt="${j.nombre}" loading="lazy">
+          <div class="discount-badge" style="font-size:0.9rem;padding:4px 10px;">-${j.descuento}%</div>
+        </div>
+        <div class="card-body">
+          <div class="genre-badge">${j.genero}</div>
+          <h6 class="card-title">${j.nombre}</h6>
+          <p class="card-text">${(j.descripcion||'').slice(0,80)}…</p>
+          <div class="developer-tag">🏢 ${j.desarrollador}</div>
+          <div class="mb-2">${renderPlataformas(j.plataformas)}</div>
+          <div class="d-flex align-items-center justify-content-between gap-2 flex-wrap mt-auto">
+            <div>
+              <span class="precio-original">$${j.precio.toFixed(2)}</span>
+              <span class="precio-final" style="font-size:1.2rem;">$${final.toFixed(2)}</span>
+              <span class="precio-descuento">-${j.descuento}%</span>
+            </div>
+            <button class="btn btn-violeta btn-sm" onclick="renderModalJuego(${j.id})">🛒 Comprar</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+</script>
+</body>
+</html>

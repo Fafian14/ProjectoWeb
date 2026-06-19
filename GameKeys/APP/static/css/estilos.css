@@ -1,0 +1,875 @@
+/* ============================================================
+   GameKeys - Custom Styles
+   Design tokens: dark bg, violet accent, green price
+   ============================================================ */
+
+/* --- Variables / Tokens ------------------------------------ */
+:root {
+  --bg:            #0f0f1a;
+  --navbar-bg:     #141424;
+  --card-bg:       #1a1a2e;
+  --border:        #2f2f44;
+  --input-bg:      #1d1d30;
+  --input-border:  #38385c;
+  --violet:        #a855f7;
+  --violet-dark:   #7c3aed;
+  --price:         #22c55e;
+  --glow:          0 0 25px rgba(168,85,247,0.4);
+  --hero-gradient: linear-gradient(135deg,#111827,#1e1b4b);
+  --btn-violeta:   linear-gradient(90deg,#7c3aed,#a855f7);
+
+  /* Platform colors */
+  --steam:         #1b2838;
+  --epic:          #2d2d2d;
+  --ps:            #003791;
+  --xbox:          #107C10;
+  --nintendo:      #e4000f;
+  --pc:            #6f42c1;
+}
+
+/* --- Base -------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  background-color: var(--bg);
+  color: #e2e8f0;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+}
+
+a { color: var(--violet); text-decoration: none; }
+a:hover { color: #c084fc; }
+
+/* --- Scrollbar --------------------------------------------- */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--violet-dark); }
+
+/* --- Navbar ------------------------------------------------ */
+.fondo-navbar {
+  background: var(--navbar-bg) !important;
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 2px 20px rgba(0,0,0,0.5);
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.navbar-brand span.logo-gk {
+  background: var(--btn-violeta);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.nav-link {
+  color: #cbd5e1 !important;
+  font-weight: 500;
+  transition: color 0.2s;
+  padding: 0.4rem 0.75rem !important;
+}
+.nav-link:hover, .nav-link.active { color: var(--violet) !important; }
+
+.cart-badge-wrap { position: relative; display: inline-block; }
+.cart-badge-wrap .badge {
+  position: absolute;
+  top: -6px; right: -8px;
+  background: var(--violet);
+  font-size: 0.65rem;
+  min-width: 18px; min-height: 18px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* --- Buttons ----------------------------------------------- */
+.btn-violeta {
+  background: var(--btn-violeta);
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 0.5rem 1.25rem;
+  transition: box-shadow 0.25s, transform 0.15s, filter 0.2s;
+}
+.btn-violeta:hover, .btn-violeta:focus {
+  box-shadow: var(--glow);
+  transform: translateY(-1px);
+  filter: brightness(1.1);
+  color: #fff;
+}
+.btn-violeta:active { transform: translateY(0); }
+
+.btn-outline-violeta {
+  background: transparent;
+  border: 2px solid var(--violet);
+  color: var(--violet);
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 0.5rem 1.25rem;
+  transition: background 0.2s, color 0.2s, box-shadow 0.25s;
+}
+.btn-outline-violeta:hover, .btn-outline-violeta:focus {
+  background: var(--violet);
+  color: #fff;
+  box-shadow: var(--glow);
+}
+
+/* --- Game Card --------------------------------------------- */
+.game-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+  height: 100%;
+  display: flex; flex-direction: column;
+  position: relative;
+}
+.game-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--glow);
+  border-color: var(--violet);
+}
+.game-card .card-img-wrap {
+  position: relative;
+  overflow: hidden;
+  height: 200px;
+  cursor: pointer;
+}
+.game-card .card-img-wrap img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s;
+}
+.game-card:hover .card-img-wrap img { transform: scale(1.05); }
+.game-card .card-body {
+  padding: 1rem;
+  flex: 1; display: flex; flex-direction: column;
+}
+.game-card .card-title {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #f1f5f9;
+  margin-bottom: 0.3rem;
+}
+.game-card .card-text {
+  font-size: 0.82rem;
+  color: #94a3b8;
+  flex: 1;
+}
+.game-card .developer-tag {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+}
+.game-card .price-block { margin-top: auto; padding-top: 0.75rem; }
+
+/* Agotado overlay */
+.agotado-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(15,15,26,0.75);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 2;
+}
+.badge-agotado {
+  background: #ef4444;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  padding: 0.4rem 1.2rem;
+  border-radius: 6px;
+  text-transform: uppercase;
+}
+
+/* Discount badge */
+.discount-badge {
+  position: absolute;
+  top: 10px; left: 10px;
+  background: #dc2626;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  z-index: 3;
+}
+
+/* Genre badge */
+.genre-badge {
+  display: inline-block;
+  background: rgba(168,85,247,0.15);
+  border: 1px solid rgba(168,85,247,0.4);
+  color: var(--violet);
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-bottom: 0.4rem;
+}
+
+/* --- Categoria Card ---------------------------------------- */
+.categoria-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+  text-decoration: none;
+  display: block;
+  color: inherit;
+}
+.categoria-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--glow);
+  border-color: var(--violet);
+  color: inherit;
+}
+.categoria-card .cat-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+.categoria-card h5 { font-weight: 700; color: #f1f5f9; }
+.categoria-card p { font-size: 0.85rem; color: #94a3b8; margin: 0; }
+
+/* --- Hero -------------------------------------------------- */
+.hero-section {
+  background: var(--hero-gradient);
+  padding: 5rem 0 4rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero-section::before {
+  content: '';
+  position: absolute;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(168,85,247,0.15) 0%, transparent 70%);
+  top: -100px; right: -100px;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.hero-badge {
+  display: inline-block;
+  background: rgba(220,38,38,0.2);
+  border: 1px solid rgba(220,38,38,0.5);
+  color: #f87171;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 1rem;
+}
+.hero-title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 900;
+  line-height: 1.15;
+  color: #f8fafc;
+}
+.hero-title .highlight {
+  background: var(--btn-violeta);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-subtitle { color: #94a3b8; font-size: 1.05rem; max-width: 480px; }
+.hero-img-wrap {
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.hero-img-wrap img {
+  border-radius: 16px;
+  max-height: 380px;
+  width: 100%;
+  object-fit: cover;
+  box-shadow: 0 0 60px rgba(168,85,247,0.3);
+}
+
+/* --- Gift Card styles -------------------------------------- */
+.gift-header {
+  padding: 2rem 1.5rem;
+  border-radius: 14px 14px 0 0;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+.xbox-grad   { background: linear-gradient(135deg, #107C10, #0e5c0d); }
+.steam-grad  { background: linear-gradient(135deg, #1b2838, #2a475e); }
+.playstation-grad { background: linear-gradient(135deg, #003791, #0050c8); }
+
+.gift-card-wrap {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+.gift-card-wrap:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--glow);
+}
+.gift-card-body { padding: 1.5rem; }
+.gift-price-display {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--price);
+  margin: 0.5rem 0;
+}
+
+/* --- Admin ------------------------------------------------- */
+.admin-box {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.75rem;
+}
+
+/* --- Form overrides ---------------------------------------- */
+.form-control, .form-select {
+  background: var(--input-bg) !important;
+  border: 1px solid var(--input-border) !important;
+  color: #e2e8f0 !important;
+  border-radius: 8px !important;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-control:focus, .form-select:focus {
+  border-color: var(--violet) !important;
+  box-shadow: 0 0 0 3px rgba(168,85,247,0.2) !important;
+  outline: none;
+}
+.form-control::placeholder { color: #64748b !important; }
+.form-label { color: #cbd5e1; font-weight: 500; font-size: 0.9rem; }
+.form-select option { background: var(--input-bg); color: #e2e8f0; }
+
+/* --- Genre buttons ----------------------------------------- */
+.genero-btn {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: #94a3b8;
+  border-radius: 20px;
+  padding: 0.3rem 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+.genero-btn:hover {
+  border-color: var(--violet);
+  color: var(--violet);
+}
+.genero-btn.active {
+  background: var(--violet-dark);
+  border-color: var(--violet);
+  color: #fff;
+}
+
+/* --- Platform tag ------------------------------------------ */
+.plat-tag {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  color: #fff;
+  margin: 1px;
+  letter-spacing: 0.3px;
+}
+.plat-steam      { background: var(--steam); }
+.plat-epic       { background: var(--epic); border: 1px solid #555; }
+.plat-playstation { background: var(--ps); }
+.plat-xbox       { background: var(--xbox); }
+.plat-nintendo   { background: var(--nintendo); }
+.plat-pc         { background: var(--pc); }
+
+.tag-universal {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--violet-dark), var(--violet));
+  color: #fff;
+  margin: 1px;
+}
+
+/* --- Platform selector (modal) ----------------------------- */
+.plat-selector-btn {
+  background: var(--input-bg);
+  border: 2px solid var(--input-border);
+  color: #cbd5e1;
+  border-radius: 8px;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+}
+.plat-selector-btn:hover { border-color: var(--violet); color: var(--violet); }
+.plat-selector-btn.selected {
+  border-color: var(--violet);
+  background: rgba(168,85,247,0.15);
+  color: var(--violet);
+  box-shadow: 0 0 10px rgba(168,85,247,0.25);
+}
+
+/* --- Dark table -------------------------------------------- */
+.tabla-dark {
+  background: var(--card-bg) !important;
+  color: #e2e8f0 !important;
+  border-color: var(--border) !important;
+}
+.tabla-dark th {
+  background: var(--navbar-bg) !important;
+  color: #94a3b8 !important;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-color: var(--border) !important;
+}
+.tabla-dark td {
+  background: transparent !important;
+  border-color: var(--border) !important;
+  vertical-align: middle;
+}
+.tabla-dark tr:hover td { background: rgba(168,85,247,0.05) !important; }
+
+/* --- Payment method ---------------------------------------- */
+.metodo-pago {
+  background: var(--input-bg);
+  border: 2px solid var(--input-border);
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.2s, background 0.2s;
+}
+.metodo-pago:hover { border-color: var(--violet); }
+.metodo-pago.selected {
+  border-color: var(--violet);
+  background: rgba(168,85,247,0.1);
+}
+.metodo-pago .metodo-icon { font-size: 1.8rem; margin-bottom: 0.4rem; }
+.metodo-pago .metodo-name { font-size: 0.9rem; font-weight: 600; color: #e2e8f0; }
+
+/* --- Qty buttons ------------------------------------------- */
+.qty-btn {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: #e2e8f0;
+  width: 28px; height: 28px;
+  border-radius: 4px;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background 0.15s, border-color 0.15s;
+}
+.qty-btn:hover { background: var(--violet-dark); border-color: var(--violet); }
+.qty-val {
+  display: inline-block;
+  min-width: 2rem;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* --- Login ------------------------------------------------- */
+.login-bg {
+  min-height: 100vh;
+  background: var(--hero-gradient);
+  display: flex; align-items: center; justify-content: center;
+  padding: 2rem;
+}
+.login-box {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 2.25rem;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 0 40px rgba(0,0,0,0.5);
+}
+.login-tab-bar { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
+.login-tab {
+  flex: 1;
+  padding: 0.75rem;
+  text-align: center;
+  cursor: pointer;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+.login-tab:hover { color: var(--violet); }
+.login-tab.active { color: var(--violet); border-bottom-color: var(--violet); }
+
+/* --- Search input + dropdown ------------------------------- */
+.search-wrap { position: relative; }
+.search-input {
+  background: var(--input-bg) !important;
+  border: 1px solid var(--input-border) !important;
+  color: #e2e8f0 !important;
+  border-radius: 8px !important;
+  min-width: 200px;
+}
+.search-input:focus {
+  border-color: var(--violet) !important;
+  box-shadow: 0 0 0 2px rgba(168,85,247,0.15) !important;
+}
+.resultado-box {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0; right: 0;
+  background: var(--navbar-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  z-index: 9999;
+  max-height: 320px;
+  overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+.resultado-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+.resultado-item:last-child { border-bottom: none; }
+.resultado-item:hover { background: rgba(168,85,247,0.1); }
+.resultado-item img { width: 48px; height: 36px; object-fit: cover; border-radius: 4px; }
+.resultado-item .res-name { font-weight: 600; font-size: 0.88rem; color: #f1f5f9; }
+.resultado-item .res-price { font-size: 0.78rem; color: var(--price); }
+
+/* --- Footer ------------------------------------------------ */
+.footer-main {
+  background: var(--navbar-bg);
+  border-top: 1px solid var(--border);
+  padding: 3rem 0 1.5rem;
+  color: #94a3b8;
+}
+.footer-main h6 { color: #f1f5f9; font-weight: 700; margin-bottom: 1rem; }
+.footer-main a { color: #94a3b8; font-size: 0.88rem; display: block; margin-bottom: 0.4rem; }
+.footer-main a:hover { color: var(--violet); }
+.footer-main .footer-logo { font-size: 1.4rem; font-weight: 800; margin-bottom: 0.75rem; }
+
+.red-social {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: #94a3b8;
+  margin-right: 6px;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  text-decoration: none;
+}
+.red-social:hover {
+  background: rgba(168,85,247,0.15);
+  border-color: var(--violet);
+  color: var(--violet);
+}
+
+/* --- Nosotros cards ---------------------------------------- */
+.card-nosotros {
+  background: rgba(168,85,247,0.08);
+  border: 1px solid rgba(168,85,247,0.25);
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-align: center;
+}
+.card-nosotros .nos-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+.card-nosotros h6 { color: var(--violet); font-weight: 700; }
+.card-nosotros p { font-size: 0.82rem; color: #94a3b8; margin: 0; }
+
+/* --- Alerts ------------------------------------------------ */
+.alerta-ok {
+  background: rgba(34,197,94,0.12);
+  border: 1px solid rgba(34,197,94,0.4);
+  color: #86efac;
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+}
+.alerta-err {
+  background: rgba(239,68,68,0.12);
+  border: 1px solid rgba(239,68,68,0.4);
+  color: #fca5a5;
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+}
+
+/* --- Medals (top ventas) ----------------------------------- */
+.medalla-wrap { position: absolute; top: 8px; right: 8px; z-index: 5; }
+.medalla {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+.medalla-1 { background: linear-gradient(135deg,#f59e0b,#fbbf24); border: 2px solid #fde68a; }
+.medalla-2 { background: linear-gradient(135deg,#9ca3af,#d1d5db); border: 2px solid #e5e7eb; }
+.medalla-3 { background: linear-gradient(135deg,#b45309,#d97706); border: 2px solid #fcd34d; }
+.card-top1 { border-color: #f59e0b !important; box-shadow: 0 0 20px rgba(245,158,11,0.4) !important; }
+
+/* --- Profile tabs ------------------------------------------ */
+.perfil-tab-bar { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
+.perfil-tab {
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+.perfil-tab:hover { color: var(--violet); }
+.perfil-tab.active { color: var(--violet); border-bottom-color: var(--violet); }
+
+/* --- Credit card visual ------------------------------------ */
+.tarjeta-visual {
+  background: linear-gradient(135deg, #312e81, #4c1d95, #5b21b6);
+  border-radius: 16px;
+  padding: 1.75rem;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(124,58,237,0.4);
+  min-height: 180px;
+  font-family: 'Courier New', monospace;
+}
+.tarjeta-visual::before {
+  content: '';
+  position: absolute;
+  width: 200px; height: 200px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 50%;
+  top: -60px; right: -60px;
+}
+.tarjeta-visual .tv-chip { font-size: 1.8rem; margin-bottom: 1rem; }
+.tarjeta-visual .tv-num { font-size: 1.25rem; letter-spacing: 4px; font-weight: 700; }
+.tarjeta-visual .tv-label { font-size: 0.65rem; color: rgba(255,255,255,0.6); text-transform: uppercase; }
+.tarjeta-visual .tv-val { font-size: 0.9rem; font-weight: 600; }
+
+/* --- Price display ----------------------------------------- */
+.precio-final { color: var(--price); font-weight: 800; font-size: 1.1rem; }
+.precio-original { text-decoration: line-through; color: #64748b; font-size: 0.9rem; margin-right: 0.4rem; }
+.precio-descuento {
+  background: rgba(220,38,38,0.2);
+  color: #f87171;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 3px;
+  margin-left: 4px;
+}
+
+/* --- Stock indicator --------------------------------------- */
+.stock-ok { color: #22c55e; font-size: 0.82rem; }
+.stock-low { color: #f59e0b; font-size: 0.82rem; }
+.stock-out { color: #ef4444; font-size: 0.82rem; }
+.stock-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+.dot-green { background: #22c55e; box-shadow: 0 0 6px #22c55e; }
+.dot-yellow { background: #f59e0b; box-shadow: 0 0 6px #f59e0b; }
+.dot-red { background: #ef4444; box-shadow: 0 0 6px #ef4444; }
+
+/* --- Toast ------------------------------------------------- */
+.gk-toast {
+  position: fixed;
+  bottom: 2rem; right: 2rem;
+  background: var(--card-bg);
+  border: 1px solid var(--violet);
+  color: #e2e8f0;
+  padding: 0.85rem 1.5rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  box-shadow: var(--glow);
+  z-index: 99999;
+  animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
+}
+@keyframes toastIn  { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+@keyframes toastOut { from { opacity:1; } to { opacity:0; transform:translateY(10px); } }
+
+/* --- Modal overrides --------------------------------------- */
+.modal-content {
+  background: var(--card-bg) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 16px;
+  color: #e2e8f0;
+}
+.modal-header {
+  border-bottom: 1px solid var(--border) !important;
+  padding: 1rem 1.5rem;
+}
+.modal-footer { border-top: 1px solid var(--border) !important; }
+.btn-close { filter: invert(1) brightness(0.7); }
+.modal-img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  border-radius: 10px 10px 0 0;
+}
+
+/* --- Section titles ---------------------------------------- */
+.section-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #f1f5f9;
+  margin-bottom: 1.5rem;
+}
+.section-title span { color: var(--violet); }
+
+/* --- Section dividers -------------------------------------- */
+.section-divider {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  margin: 3rem 0;
+}
+
+/* --- Search bar page -------------------------------------- */
+.search-bar-page {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.stock-toggle label { color: #cbd5e1; font-weight: 500; }
+.form-check-input:checked { background-color: var(--violet); border-color: var(--violet); }
+
+/* --- Profile header ---------------------------------------- */
+.perfil-header {
+  background: linear-gradient(135deg, var(--card-bg), rgba(124,58,237,0.15));
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+}
+.avatar-circle {
+  width: 70px; height: 70px;
+  border-radius: 50%;
+  background: var(--btn-violeta);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem;
+  font-weight: 900;
+  color: #fff;
+  box-shadow: var(--glow);
+  flex-shrink: 0;
+}
+
+/* --- Offer card -------------------------------------------- */
+.oferta-card { border-color: rgba(220,38,38,0.5) !important; }
+.oferta-card:hover { border-color: #ef4444 !important; box-shadow: 0 0 20px rgba(239,68,68,0.3) !important; }
+
+/* --- Pulsing dot ------------------------------------------- */
+.pulse-dot {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  margin-right: 6px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+.pulse-green { background: #22c55e; box-shadow: 0 0 0 0 rgba(34,197,94,0.4); }
+.pulse-red   { background: #ef4444; box-shadow: 0 0 0 0 rgba(239,68,68,0.4); }
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(168,85,247,0.6); }
+  70%  { box-shadow: 0 0 0 8px rgba(168,85,247,0); }
+  100% { box-shadow: 0 0 0 0 rgba(168,85,247,0); }
+}
+.pulse-green { animation-name: pulseGreen; }
+.pulse-red   { animation-name: pulseRed; }
+@keyframes pulseGreen {
+  0%   { box-shadow: 0 0 0 0 rgba(34,197,94,0.6); }
+  70%  { box-shadow: 0 0 0 8px rgba(34,197,94,0); }
+  100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+}
+@keyframes pulseRed {
+  0%   { box-shadow: 0 0 0 0 rgba(239,68,68,0.6); }
+  70%  { box-shadow: 0 0 0 8px rgba(239,68,68,0); }
+  100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); }
+}
+
+/* --- Responsive -------------------------------------------- */
+@media (max-width: 768px) {
+  .hero-section { padding: 3rem 0 2rem; }
+  .hero-img-wrap { margin-top: 2rem; }
+  .hero-title { font-size: 2rem; }
+  .login-box { padding: 1.5rem; }
+  .perfil-tab { padding: 0.6rem 0.8rem; font-size: 0.8rem; }
+  .resultado-box { left: -60px; right: 0; }
+}
+
+/* --- W3.CSS helpers (dark overrides) ----------------------- */
+.w3-card { box-shadow: 0 2px 16px rgba(0,0,0,0.4); }
+.w3-animate-fading { animation: w3fading 2s infinite; }
+@keyframes w3fading { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+/* --- Empty state ------------------------------------------- */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #64748b;
+}
+.empty-state .empty-icon { font-size: 4rem; margin-bottom: 1rem; }
+.empty-state h5 { color: #94a3b8; font-weight: 700; }
+.empty-state p { font-size: 0.9rem; }
+
+/* --- History items ----------------------------------------- */
+.historial-item {
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+}
+.historial-item .order-id { color: var(--violet); font-size: 0.8rem; font-weight: 700; }
+.historial-item .order-date { color: #64748b; font-size: 0.78rem; }
+.historial-item .order-total { color: var(--price); font-weight: 700; }
+
+/* --- Hint box --------------------------------------------- */
+.hint-box {
+  background: rgba(168,85,247,0.08);
+  border: 1px solid rgba(168,85,247,0.3);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.82rem;
+  color: #c4b5fd;
+  margin-bottom: 1rem;
+}
+
+/* --- Dropdown menu dark ------------------------------------ */
+.dropdown-menu {
+  background: var(--navbar-bg) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 10px !important;
+}
+.dropdown-item {
+  color: #cbd5e1 !important;
+  font-size: 0.88rem;
+}
+.dropdown-item:hover {
+  background: rgba(168,85,247,0.15) !important;
+  color: var(--violet) !important;
+}
+.dropdown-divider { border-color: var(--border) !important; }
+
+/* --- Navbar toggler ---------------------------------------- */
+.navbar-toggler { border-color: var(--border) !important; }
+.navbar-toggler-icon { filter: invert(0.8); }
+
+/* --- Misc -------------------------------------------------- */
+.text-violet  { color: var(--violet); }
+.text-price   { color: var(--price); }
+.text-muted   { color: #64748b !important; }
+.bg-card      { background: var(--card-bg); }
+.border-dark2 { border-color: var(--border) !important; }

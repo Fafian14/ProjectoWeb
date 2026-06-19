@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Búsqueda - GameKeys</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="/static/css/estilos.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg fondo-navbar sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="/index.html"><span class="logo-gk">🎮 GameKeys</span></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMain">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" href="/index.html">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link" href="/tienda.html">Tienda</a></li>
+        <li class="nav-item"><a class="nav-link" href="/gift-cards.html">🎁 Gift Cards</a></li>
+      </ul>
+      <div class="search-wrap me-2">
+        <input type="text" id="buscador-input" class="form-control search-input" placeholder="Buscar juegos..." autocomplete="off">
+        <div id="resultado-box" class="resultado-box" style="display:none;"></div>
+      </div>
+      <button id="btn-buscar" class="btn btn-violeta btn-sm me-3">Buscar</button>
+      <a href="/carrito.html" class="btn btn-outline-violeta btn-sm me-2 cart-badge-wrap">
+        🛒 <span class="badge carrito-badge" style="display:none;">0</span>
+      </a>
+      <div id="auth-zone"></div>
+    </div>
+  </div>
+</nav>
+
+<div class="container py-5">
+  <div id="busqueda-titulo" class="section-title mb-1">🔍 Resultados de búsqueda</div>
+  <p id="busqueda-info" style="color:#94a3b8;" class="mb-5"></p>
+
+  <!-- Available -->
+  <div id="section-disp">
+    <div class="mb-3 d-flex align-items-center gap-2">
+      <span class="pulse-dot pulse-green"></span>
+      <h5 class="mb-0 fw-700" style="color:#f1f5f9;">Disponibles</h5>
+      <span class="badge" style="background:rgba(34,197,94,0.2);color:#22c55e;" id="cnt-disp">0</span>
+    </div>
+    <div class="row" id="res-disponibles"></div>
+  </div>
+
+  <!-- Out of stock -->
+  <div id="section-agot" class="mt-5">
+    <div class="mb-3 d-flex align-items-center gap-2">
+      <span class="pulse-dot pulse-red"></span>
+      <h5 class="mb-0 fw-700" style="color:#f1f5f9;">Sin stock</h5>
+      <span class="badge" style="background:rgba(239,68,68,0.2);color:#ef4444;" id="cnt-agot">0</span>
+    </div>
+    <div class="row" id="res-agotados"></div>
+  </div>
+
+  <!-- Empty state -->
+  <div id="empty-state" class="empty-state" style="display:none;">
+    <div class="empty-icon">🔍</div>
+    <h5>Sin resultados</h5>
+    <p>No encontramos juegos que coincidan con tu búsqueda</p>
+    <div class="mt-3">
+      <p style="color:#64748b;">Sugerencias:</p>
+      <ul style="color:#94a3b8;text-align:left;display:inline-block;">
+        <li>Revisa la ortografía del nombre</li>
+        <li>Prueba con términos más generales</li>
+        <li>Busca por género (RPG, FPS, etc.)</li>
+      </ul>
+    </div>
+    <a href="/tienda.html" class="btn btn-violeta mt-2">🕹️ Ver toda la tienda</a>
+  </div>
+</div>
+
+<div class="modal fade" id="modalJuego" tabindex="-1"></div>
+
+<footer class="footer-main mt-5">
+  <div class="container text-center" style="font-size:0.8rem;color:#475569;">
+    © 2024 GameKeys. Todos los derechos reservados.
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/static/js/app.js"></script>
+<script>
+function initPagina() {
+  const params = new URLSearchParams(location.search);
+  const q      = params.get('q') || '';
+
+  // Pre-fill search bar
+  const inp = document.getElementById('buscador-input');
+  if (inp) inp.value = q;
+
+  // Update title
+  document.getElementById('busqueda-titulo').innerHTML = 
+    `🔍 Resultados para <span style="color:var(--violet);">"${q}"</span>`;
+
+  if (!q) {
+    document.getElementById('busqueda-info').textContent = 'Escribe algo en el buscador para empezar';
+    document.getElementById('section-disp').style.display = 'none';
+    document.getElementById('section-agot').style.display = 'none';
+    return;
+  }
+
+  const ql    = q.toLowerCase();
+  const found = JUEGOS.filter(j =>
+    j.nombre.toLowerCase().includes(ql) ||
+    j.genero.toLowerCase().includes(ql) ||
+    j.desarrollador.toLowerCase().includes(ql) ||
+    (j.descripcion || '').toLowerCase().includes(ql)
+  );
+
+  const disp  = found.filter(j => j.stock > 0);
+  const agot  = found.filter(j => j.stock === 0);
+
+  document.getElementById('busqueda-info').textContent =
+    `Se encontraron ${found.length} resultado${found.length !== 1 ? 's' : ''} para "${q}"`;
+  document.getElementById('cnt-disp').textContent = disp.length;
+  document.getElementById('cnt-agot').textContent = agot.length;
+
+  if (!found.length) {
+    document.getElementById('empty-state').style.display = '';
+    document.getElementById('section-disp').style.display = 'none';
+    document.getElementById('section-agot').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('empty-state').style.display = 'none';
+  document.getElementById('res-disponibles').innerHTML = disp.map(j => crearGameCard(j, false)).join('');
+  document.getElementById('section-disp').style.display = disp.length ? '' : 'none';
+
+  if (agot.length) {
+    document.getElementById('res-agotados').innerHTML = agot.map(j => crearGameCard(j, true)).join('');
+    document.getElementById('section-agot').style.display = '';
+  } else {
+    document.getElementById('section-agot').style.display = 'none';
+  }
+}
+</script>
+</body>
+</html>

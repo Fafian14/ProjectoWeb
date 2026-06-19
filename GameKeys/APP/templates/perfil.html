@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Perfil - GameKeys</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="/static/css/estilos.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg fondo-navbar sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="/index.html"><span class="logo-gk">🎮 GameKeys</span></a>
+    <div class="ms-auto d-flex align-items-center gap-2">
+      <a href="/tienda.html" class="btn btn-outline-violeta btn-sm">🕹️ Tienda</a>
+      <a href="/carrito.html" class="btn btn-outline-violeta btn-sm cart-badge-wrap">
+        🛒 <span class="badge carrito-badge" style="display:none;">0</span>
+      </a>
+      <div id="auth-zone"></div>
+    </div>
+  </div>
+</nav>
+
+<div class="container py-5" style="max-width:800px;">
+
+  <!-- Profile header -->
+  <div class="perfil-header d-flex align-items-center gap-4">
+    <div class="avatar-circle" id="perfil-avatar">?</div>
+    <div>
+      <h4 id="perfil-nombre-display" style="color:#f1f5f9;font-weight:800;margin:0;"></h4>
+      <div id="perfil-email-display" style="color:#64748b;font-size:0.9rem;"></div>
+      <div style="margin-top:0.5rem;">
+        <span class="badge" style="background:rgba(168,85,247,0.2);color:var(--violet);font-size:0.8rem;">
+          👤 Usuario
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab bar -->
+  <div class="perfil-tab-bar">
+    <div class="perfil-tab active" onclick="showPerfilTab('compras')">🛍️ Mis Compras</div>
+    <div class="perfil-tab" onclick="showPerfilTab('perfil')">👤 Mi Perfil</div>
+    <div class="perfil-tab" onclick="showPerfilTab('facturacion')">💳 Facturación</div>
+  </div>
+
+  <!-- TAB: Mis Compras -->
+  <div id="tab-compras">
+    <div id="historial-lista"></div>
+    <div id="historial-empty" class="empty-state" style="display:none;">
+      <div class="empty-icon">🛒</div>
+      <h5>No tienes compras aún</h5>
+      <p>Explora la tienda y realiza tu primera compra</p>
+      <a href="/tienda.html" class="btn btn-violeta">🕹️ Ir a la tienda</a>
+    </div>
+  </div>
+
+  <!-- TAB: Mi Perfil -->
+  <div id="tab-perfil" style="display:none;">
+    <div class="admin-box">
+      <h5 class="mb-4" style="color:#f1f5f9;">Información personal</h5>
+      <div class="mb-3">
+        <label class="form-label">Nombre completo</label>
+        <input type="text" id="edit-nombre" class="form-control" placeholder="Tu nombre">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" id="edit-email" class="form-control" readonly style="opacity:0.6;">
+        <div class="form-text" style="color:#64748b;">El email no se puede modificar</div>
+      </div>
+      <button class="btn btn-violeta" onclick="guardarPerfil()">💾 Guardar cambios</button>
+      <div id="perfil-ok" class="alerta-ok mt-3" style="display:none;">✅ Perfil actualizado correctamente</div>
+
+      <hr style="border-color:var(--border);margin:2rem 0;">
+
+      <h6 style="color:#f1f5f9;margin-bottom:1rem;">🔐 Cambiar contraseña</h6>
+      <div class="mb-3">
+        <label class="form-label">Contraseña actual</label>
+        <input type="password" id="pass-actual" class="form-control" placeholder="••••••••">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Nueva contraseña</label>
+        <input type="password" id="pass-nueva" class="form-control" placeholder="Mínimo 6 caracteres">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Confirmar nueva contraseña</label>
+        <input type="password" id="pass-confirm" class="form-control" placeholder="Repite la contraseña">
+      </div>
+      <div id="pass-error" class="alerta-err mb-3" style="display:none;"></div>
+      <div id="pass-ok" class="alerta-ok mb-3" style="display:none;">✅ Contraseña actualizada</div>
+      <button class="btn btn-outline-violeta" onclick="cambiarPassword()">🔐 Cambiar contraseña</button>
+    </div>
+  </div>
+
+  <!-- TAB: Facturación -->
+  <div id="tab-facturacion" style="display:none;">
+    <div class="admin-box">
+      <h5 class="mb-4" style="color:#f1f5f9;">💳 Datos de facturación</h5>
+
+      <!-- Animated card visual -->
+      <div class="tarjeta-visual mb-4" id="tarjeta-preview">
+        <div class="tv-chip">💳</div>
+        <div class="tv-num" id="tv-num">•••• •••• •••• ••••</div>
+        <div class="d-flex justify-content-between align-items-end mt-2">
+          <div>
+            <div class="tv-label">Titular</div>
+            <div class="tv-val" id="tv-titular">TU NOMBRE</div>
+          </div>
+          <div class="text-end">
+            <div class="tv-label">Vencimiento</div>
+            <div class="tv-val" id="tv-venc">MM/AA</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Titular de la tarjeta</label>
+        <input type="text" id="fact-titular" class="form-control" placeholder="Nombre Apellido"
+               oninput="updateCardVisual()">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Número de tarjeta</label>
+        <input type="text" id="fact-numero" class="form-control" placeholder="1234 5678 9012 3456"
+               maxlength="19" oninput="formatCardNumber(this); updateCardVisual()">
+      </div>
+      <div class="row g-3 mb-3">
+        <div class="col-6">
+          <label class="form-label">Vencimiento (MM/AA)</label>
+          <input type="text" id="fact-venc" class="form-control" placeholder="MM/AA" maxlength="5"
+                 oninput="formatExpiry(this); updateCardVisual()">
+        </div>
+        <div class="col-6">
+          <label class="form-label">CVV</label>
+          <input type="password" id="fact-cvv" class="form-control" placeholder="•••" maxlength="4"
+                 oninput="this.value=this.value.replace(/\D/g,'')">
+        </div>
+      </div>
+      <div id="fact-error" class="alerta-err mb-3" style="display:none;"></div>
+      <div id="fact-ok" class="alerta-ok mb-3" style="display:none;">✅ Datos de facturación guardados</div>
+      <button class="btn btn-violeta" onclick="guardarFacturacion()">💾 Guardar tarjeta</button>
+    </div>
+  </div>
+</div>
+
+<footer class="footer-main mt-5">
+  <div class="container text-center" style="font-size:0.8rem;color:#475569;">
+    © 2024 GameKeys. Todos los derechos reservados.
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/static/js/app.js"></script>
+<script>
+let currentUser = null;
+
+function initPagina() {
+  currentUser = getUsuario();
+  if (!currentUser) {
+    window.location.href = '/login.html';
+    return;
+  }
+
+  // Fill header
+  const inicial = (currentUser.nombre || currentUser.email || '?')[0].toUpperCase();
+  document.getElementById('perfil-avatar').textContent         = inicial;
+  document.getElementById('perfil-nombre-display').textContent = currentUser.nombre || currentUser.email;
+  document.getElementById('perfil-email-display').textContent  = currentUser.email;
+
+  // Fill profile form
+  document.getElementById('edit-nombre').value = currentUser.nombre || '';
+  document.getElementById('edit-email').value  = currentUser.email  || '';
+
+  // Load billing if saved
+  const saved = JSON.parse(localStorage.getItem('gk_billing') || '{}');
+  if (saved.titular) document.getElementById('fact-titular').value = saved.titular;
+  if (saved.numero)  document.getElementById('fact-numero').value  = saved.numero;
+  if (saved.venc)    document.getElementById('fact-venc').value    = saved.venc;
+
+  // Load purchase history
+  renderHistorial();
+
+  // Check URL tab param
+  const tab = new URLSearchParams(location.search).get('tab');
+  if (tab) showPerfilTab(tab);
+}
+
+function showPerfilTab(tab) {
+  ['compras','perfil','facturacion'].forEach(t => {
+    document.getElementById('tab-' + t).style.display = t === tab ? '' : 'none';
+  });
+  document.querySelectorAll('.perfil-tab').forEach((el, i) => {
+    el.classList.toggle('active', ['compras','perfil','facturacion'][i] === tab);
+  });
+}
+
+function renderHistorial() {
+  const hist  = JSON.parse(localStorage.getItem('gk_historial') || '[]');
+  const lista = document.getElementById('historial-lista');
+  const empty = document.getElementById('historial-empty');
+
+  if (!hist.length) {
+    lista.innerHTML = '';
+    empty.style.display = '';
+    return;
+  }
+  empty.style.display = 'none';
+
+  lista.innerHTML = hist.map(h => `
+    <div class="historial-item">
+      <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
+        <div>
+          <div class="order-id">Pedido #${h.id}</div>
+          <div class="order-date">📅 ${h.fecha}</div>
+        </div>
+        <div class="text-end">
+          <div class="order-total">$${h.total}</div>
+          <div style="font-size:0.75rem;color:#64748b;">${h.metodo === 'tarjeta' ? '💳' : '🅿️'} ${h.metodo}</div>
+        </div>
+      </div>
+      <div style="font-size:0.83rem;color:#94a3b8;">
+        ${h.items.map(i => `<span style="margin-right:1rem;">🎮 ${i.nombre} ×${i.cantidad}</span>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function guardarPerfil() {
+  const nombre = document.getElementById('edit-nombre').value.trim();
+  if (!nombre) { mostrarToast('⚠️ Ingresa tu nombre'); return; }
+  currentUser.nombre = nombre;
+  guardarUsuario(currentUser);
+  document.getElementById('perfil-nombre-display').textContent = nombre;
+  document.getElementById('perfil-avatar').textContent = nombre[0].toUpperCase();
+  document.getElementById('perfil-ok').style.display = '';
+  setTimeout(() => { document.getElementById('perfil-ok').style.display = 'none'; }, 3000);
+}
+
+function cambiarPassword() {
+  const actual   = document.getElementById('pass-actual').value;
+  const nueva    = document.getElementById('pass-nueva').value;
+  const confirm  = document.getElementById('pass-confirm').value;
+  const err      = document.getElementById('pass-error');
+  const ok       = document.getElementById('pass-ok');
+
+  if (!actual) { err.textContent = '⚠️ Ingresa tu contraseña actual'; err.style.display = ''; return; }
+  if (nueva.length < 6) { err.textContent = '⚠️ La nueva contraseña debe tener al menos 6 caracteres'; err.style.display = ''; return; }
+  if (nueva !== confirm) { err.textContent = '⚠️ Las contraseñas no coinciden'; err.style.display = ''; return; }
+
+  err.style.display = 'none';
+  ok.style.display = '';
+  document.getElementById('pass-actual').value = '';
+  document.getElementById('pass-nueva').value  = '';
+  document.getElementById('pass-confirm').value = '';
+  setTimeout(() => { ok.style.display = 'none'; }, 3000);
+}
+
+function formatCardNumber(inp) {
+  let v = inp.value.replace(/\D/g, '').slice(0, 16);
+  inp.value = v.replace(/(.{4})/g, '$1 ').trim();
+}
+
+function formatExpiry(inp) {
+  let v = inp.value.replace(/\D/g, '').slice(0, 4);
+  if (v.length >= 2) v = v.slice(0, 2) + '/' + v.slice(2);
+  inp.value = v;
+}
+
+function updateCardVisual() {
+  const num     = document.getElementById('fact-numero').value || '';
+  const titular = document.getElementById('fact-titular').value || 'TU NOMBRE';
+  const venc    = document.getElementById('fact-venc').value    || 'MM/AA';
+
+  const displayNum = (num + ' •••• •••• •••• ••••').replace(/[^ •0-9]/g,'').slice(0,19) || '•••• •••• •••• ••••';
+  document.getElementById('tv-num').textContent     = num.padEnd(19,'•').slice(0,19).replace(/(.{4})/g,'$1 ').trim() || '•••• •••• •••• ••••';
+  document.getElementById('tv-titular').textContent = titular.toUpperCase().slice(0,22);
+  document.getElementById('tv-venc').textContent    = venc || 'MM/AA';
+}
+
+function guardarFacturacion() {
+  const titular = document.getElementById('fact-titular').value.trim();
+  const numero  = document.getElementById('fact-numero').value.trim();
+  const venc    = document.getElementById('fact-venc').value.trim();
+  const cvv     = document.getElementById('fact-cvv').value.trim();
+  const err     = document.getElementById('fact-error');
+  const ok      = document.getElementById('fact-ok');
+
+  if (!titular || !numero || !venc || !cvv) {
+    err.textContent = '⚠️ Por favor completa todos los campos';
+    err.style.display = ''; ok.style.display = 'none'; return;
+  }
+  const numDigits = numero.replace(/\D/g,'');
+  if (numDigits.length < 16) {
+    err.textContent = '⚠️ El número de tarjeta debe tener 16 dígitos';
+    err.style.display = ''; return;
+  }
+  err.style.display = 'none';
+  localStorage.setItem('gk_billing', JSON.stringify({ titular, numero, venc }));
+  ok.style.display = '';
+  setTimeout(() => { ok.style.display = 'none'; }, 3000);
+}
+</script>
+</body>
+</html>
